@@ -28,19 +28,52 @@ import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component {
 
-    render() {
+    constructor(props) {
+        super(props);
+        this.state = { lat : null, errorMessage : ''};
 
-        console.log(1);
+        // console.log(this.props);
+        // console.log(this.context);
+    }
+    
+    componentDidMount() {
+        console.log("Component has been Mounted just now.");
+        window.navigator.geolocation.getCurrentPosition(
+            position => {
+                console.log(position);
+                this.setState({ lat : position.coords.latitude });
+            },
+            err => this.setState({ errorMessage : err.message })
+        );
+    }
+
+    componentDidUpdate() {
+        console.log("My component got re-rendered");
+    }
+
+
+    render() {  
         
-        await window.navigator.geolocation.getCurrentPosition(
-            position => console.log(position),
-            err => console.log(err)
-            );
-            
-        console.log(2);
-        return (<div>Latitude : </div>);
+        if(this.state.lat && !this.state.errorMessage) {
+            return <SeasonDisplay lat={this.state.lat} />
+        }
+
+        if(!this.state.lat && this.state.errorMessage) {
+            return <div>Error : {this.state.errorMessage}</div>;
+        }
+
+        return <div>Loading...</div>;
+
+        // return (
+        //     <div>
+        //         Latitude : {this.state.lat}
+        //         <br />
+        //         Error : {this.state.errorMessage}
+        //     </div>
+        // );
     }
 
 }
+
 
 ReactDOM.render(<App />, document.querySelector('#root'));
