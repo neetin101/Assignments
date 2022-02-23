@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SeasonDisplay from './SeasonDisplay';
+import Spinner from './Spinner.js';
 
 
 // const cbFunc = position => {
@@ -28,13 +29,13 @@ import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = { lat : null, errorMessage : ''};
+    state = { lat : null, errorMessage : ''};
+    // constructor(props) {
+    //     super(props);
 
-        // console.log(this.props);
-        // console.log(this.context);
-    }
+    //     // console.log(this.props);
+    //     // console.log(this.context);
+    // }
     
     componentDidMount() {
         console.log("Component has been Mounted just now.");
@@ -51,9 +52,7 @@ class App extends React.Component {
         console.log("My component got re-rendered");
     }
 
-
-    render() {  
-        
+    renderContent() {
         if(this.state.lat && !this.state.errorMessage) {
             return <SeasonDisplay lat={this.state.lat} />
         }
@@ -62,7 +61,17 @@ class App extends React.Component {
             return <div>Error : {this.state.errorMessage}</div>;
         }
 
-        return <div>Loading...</div>;
+        return <Spinner message="Please allow loacation request..." />;
+    }
+
+    render() {  
+
+        return (
+            <div className='red'>
+                {this.renderContent()}
+            </div>
+        );
+        
 
         // return (
         //     <div>
