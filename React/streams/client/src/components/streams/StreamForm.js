@@ -4,9 +4,10 @@ import { Field, reduxForm } from "redux-form";
 
 // If using StreamForm as Functional Component, then input is lagging. Why????
 
-class StreamForm extends React.Component {
 
-    renderError = ({ error, touched }) => {
+const StreamForm = props => {
+
+    const renderError = ({ error, touched }) => {
         if(error && touched) {
             return (
                 <div className="ui error message">
@@ -16,28 +17,61 @@ class StreamForm extends React.Component {
         }
     };
 
-    renderInput = ({ input, label, meta }) => {
+    const renderInput = ({ input, label, meta }) => {
         const className = `field ${meta.error && meta.touched ? 'error' : ''}`;
         return (
             <div className={className}>
                 <label>{label}</label>
-                <input {...input} autoComplete="off" />
-                {this.renderError(meta)}
+                <input {...input} autoComplete="off" autoFocus={label === 'Enter Title'}/>          {/* Using Autofocus to correct ( or create another ) error */}
+                {renderError(meta)}
             </div>
         );
     };
 
-    render() {
-        return (
-            <form onSubmit={this.props.handleSubmit(this.props.onFormSubmit)} className="ui form error">
-                <Field name="title" component={this.renderInput} label="Enter Title" />
-                <Field name="description" component={this.renderInput} label="Enter Description" />
-                <button className="ui button primary">Submit</button>
-            </form>
-        );
-    }
+    return (
+        <form onSubmit={props.handleSubmit(props.onFormSubmit)} className="ui form error">
+            <Field name="title" component={renderInput} label="Enter Title" />
+            <Field name="description" component={renderInput} label="Enter Description" />
+            <button className="ui button primary">Submit</button>
+        </form>
+    );
 
-}
+};
+
+// class StreamForm extends React.Component {
+
+//     renderError = ({ error, touched }) => {
+//         if(error && touched) {
+//             return (
+//                 <div className="ui error message">
+//                     <div className="header">{error}</div>
+//                 </div>
+//             );
+//         }
+//     };
+
+//     renderInput = ({ input, label, meta }) => {
+//         const className = `field ${meta.error && meta.touched ? 'error' : ''}`;
+//         return (
+//             <div className={className}>
+//                 <label>{label}</label>
+//                 <input {...input} autoComplete="off" />
+//                 {this.renderError(meta)}
+//             </div>
+//         );
+//     };
+
+//     render() {
+//         return (
+//             <form onSubmit={this.props.handleSubmit(this.props.onFormSubmit)} className="ui form error">
+//                 <Field name="title" component={this.renderInput} label="Enter Title" />
+//                 <Field name="description" component={this.renderInput} label="Enter Description" />
+//                 <button className="ui button primary">Submit</button>
+//             </form>
+//         );
+//     }
+
+// }
 
 const validate = formValues => {
     const errors = {};
